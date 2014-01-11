@@ -1,0 +1,128 @@
+tyler.felsted@yahoo.com
+andersonperkins@earthlink.net
+pmcb13@gmail.com
+
+
+
+Shooter
+-------
+
+shoot prep (cocking)
+shoot aiming
+	camera
+shooting
+sensors
+	shooting angle
+	tension?
+		adjustable/variable tension
+		both for shoot compensation and for truss
+
+pick up
+gripping
+lift
+prevent capturing opponent's ball
+goalie mode extension
+
+
+drive train
+-----------
+
+motor control
+shifters
+joystick interface
+
+righting the robot if fallen
+	front
+	back
+	side
+
+
+
+autonomous
+----------
+
+shoot routine
+-shooter
+-hot goal
+-camera
+	left right side handling?
+
+drive forward
+timer
+
+
+
+sensors
+-------
+
+encoders on drive train
+	measure distance for autonomous
+arm position
+ball capture
+shooter tension
+camera
+	hot goal
+	targeting
+truss?
+
+
+outputs
+-------
+drive 2 forward/reverse
+	proportional control
+	fine control?
+drive hi/lo range shifter
+arm up/down
+open/close arm
+shoot release
+targeting lights
+indicators
+	ball capture
+	in range
+	shoot mode
+capture roller
+
+
+
+classes
+-------
+
+main
+
+teleop
+
+autonomous
+
+controller interface
+
+drive
+
+camera
+	hot goal
+	range
+arm
+	position
+	open/close
+	shoot-power
+	shoot
+
+
+drive station
+-------------
+
+driver
+	left/right joysticks
+	shift
+	fine control mode?
+
+manipulator
+	arm raise/lower
+	capture
+	cocking
+	shoot
+	shoot-mode truss/goal
+	release
+	targeting?
+	goalie mode?
+
+google glass?
