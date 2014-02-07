@@ -62,6 +62,9 @@ git config --global branch.master.merge refs/heads/master
 	//it's supposed to be "git@github.com" don't worry about changing it
 	//for something else	
 
-git pull 2014-game 
+git pull origin master 
 	//this should pull the appropriate files to your computer
+	
+	//You will find your files, saved in my computer, users, "your username", projects, FRC-2014
+	//Here also you will find all the files you pulled previously.
 
