@@ -34,7 +34,7 @@ ssh-keygen -t rsa -C "johndoe@example.com"
 	//it will prompt a statement at you, just press enter
 	//create passphrase (won't show what you type but it is recording each
 			     letter, default password I've been using is 'bacon'
-clipo < ~/.ssh/id_rsa.pub
+clip < ~/.ssh/id_rsa.pub
 	//saves the id you just created to your clip board, you will need
 	//to 'control v' in a minute
 	//open git hub
