@@ -1,0 +1,24 @@
+
+
+http://docs.oracle.com/javase/tutorial/java/nutsandbolts/index.html
+
+http://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
+
+http://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
+
+http://docs.oracle.com/javase/tutorial/java/nutsandbolts/expressions.html
+
+http://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html
+
+
+comparing strings
+
+http://alvinalexander.com/java/edu/qanda/pjqa00001.shtml
+
+
+input using scanner
+http://docs.oracle.com/javase/7/docs/api/java/util/Scanner.html
+
+
+
+
