@@ -43,6 +43,23 @@ public class Shooter
     }
     
     //Gets the encoder values for something I don't know what
+    public void startWinchEncoder(boolean setEnc)
+    {
+        if(setEnc)
+        {
+            winchEncoder.start();
+        }
+        else
+        {
+            winchEncoder.stop();
+        }
+    }
+    
+    public void resetWinchEncoder()
+    {
+        winchEncoder.reset();
+    }
+    
     public int getWinchEncoder()
     {
         return winchEncoder.get();

@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.*;
  *
  * @author Developer
  */
-public class Arm {
-    
+public class Arm 
+{
     Talon armTalon1;
     Talon armTalon2;
     Talon rollerTalon;

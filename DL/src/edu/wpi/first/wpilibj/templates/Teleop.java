@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.*;
  *
  * @author Developer
  */
-public class Teleop {
+public class Teleop 
+{
     
     ControlStation controlStation;
     Drivetrain drivetrain;

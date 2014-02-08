@@ -25,6 +25,9 @@ public class AerialPig2014 extends IterativeRobot
     Drivetrain drivetrain = new Drivetrain(1, 2, 3, 4, 1, 2, 3, 4, 1, 9, 1);
     Shooter shooter = new Shooter(5, 6, 5, 6, 2, 10);
     Arm arm = new Arm(7, 8, 9, 7, 8, 3, 11, 12, 13);
+    Teleop teleop = new Teleop(controlStation, drivetrain, shooter, arm);
+    Automode automode = new Automode(drivetrain, shooter, arm);
+    
     public void robotInit()
     {
 
@@ -32,22 +35,22 @@ public class AerialPig2014 extends IterativeRobot
     
     public void autonomousInit()
     {
-        
+        automode.init();
     }
 
     public void autonomousPeriodic()
     {
-
+        automode.runAutomode();
     }
     
     public void teleopInit()
     {
-        
+        teleop.init();
     }
 
     public void teleopPeriodic()
     {
-        
+        teleop.runTeleop();
     }
     
     public void testPeriodic()
