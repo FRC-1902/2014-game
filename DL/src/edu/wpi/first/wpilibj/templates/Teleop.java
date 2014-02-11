@@ -15,7 +15,7 @@ public class Teleop
     Arm arm;
     
     //Variables
-    boolean hasFired = false;
+    boolean hasFired = true;
     long fireStartTimeMS = 0;
     int rechargeTime = 1000;
     //TODO: These currently mean nothing!

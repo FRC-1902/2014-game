@@ -92,7 +92,7 @@ public class Arm
     //THIS MUST BE TESTED
     public void moveArmTo(int targetPosition)
     {
-        double p = 0.05; //This needs to be tuned
+        double p = 0.05; //TODO:This needs to be tuned
         double error = targetPosition - getArmEncoder();
         
         error *= p;

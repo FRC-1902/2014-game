@@ -79,6 +79,17 @@ public class Drivetrain
     {
         compressor.start();
     }
+    
+    //TODO: This must be tested and tuned
+    public void moveTo(int targetPosition)
+    {
+        double p = 0.05;
+        double error = targetPosition - getDistance();
+        
+        error *= p;
+        
+        setPower(error, error);
+    }
 }
 
             
