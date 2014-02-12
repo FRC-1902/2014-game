@@ -58,16 +58,7 @@ public class Automode
                 arm.setGripperSolenoid(false);
                 step++;
         }
-        
         else if(step == 2)
-        {
-            arm.moveArmTo(50);
-            if(arm.getArmEncoder() <= 50)
-            {
-                step++;
-            }
-        }
-        else if(step == 3)
         {
             //TODO:if camera
             if(getTime() >= 5000)
@@ -75,15 +66,16 @@ public class Automode
                 step++;
             }
         }
-        else if(step == 4)
+        else if(step == 3)
         {
             drivetrain.moveTo(moveDistance);
-            if(drivetrain.getDistance() >= moveDistance)
+            arm.moveArmTo(Arm.scorePreset);
+            if(drivetrain.getDistance() >= moveDistance && arm.getArmEncoder() <= Arm.scorePreset)
             {
                 step++;
             }
         }
-        else if(step == 5)
+        else if(step == 4)
         {
             shooter.setFireSolenoid(true);
         }

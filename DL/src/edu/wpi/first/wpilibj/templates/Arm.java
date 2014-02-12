@@ -21,6 +21,11 @@ public class Arm
     DigitalInput topArmLimit;
     DigitalInput bottomArmLimit;
     
+    //TODO: These currently mean nothing!
+    public static final int floorPreset = 0;
+    public static final int scorePreset = 50;
+    public static final int trussPreset = 75;
+    
     public Arm(int armTal1, int armTal2, int rollTal, int armEnc1, int armEnc2, int gripSolenoid, int touch, int topTouch, int bottomTouch)
     {
         armTalon1 = new Talon(armTal1);

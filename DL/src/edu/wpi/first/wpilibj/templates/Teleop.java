@@ -18,10 +18,6 @@ public class Teleop
     boolean hasFired = true;
     long fireStartTimeMS = 0;
     int rechargeTime = 1000;
-    //TODO: These currently mean nothing!
-    int floorPreset = 0;
-    int scorePreset = 50;
-    int trussPreset = 75;
     
     public Teleop(ControlStation cs, Drivetrain dt, Shooter shoot, Arm a)
     {
@@ -51,23 +47,22 @@ public class Teleop
             drivetrain.shift(false);
         }
         
-        //Move arm with joystick
-        
+        //Move arm with joystick     
         arm.setArmMotors(controlStation.getArmJoystick());
         
         //Move arm with presets
         //These numbers must be tested
         if(controlStation.getFloorPreset() == ControlStation.PRESSED)
         {
-            arm.moveArmTo(floorPreset);
+            arm.moveArmTo(Arm.floorPreset);
         }
         if(controlStation.getScorePreset() == ControlStation.PRESSED)
         {
-            arm.moveArmTo(scorePreset);
+            arm.moveArmTo(Arm.scorePreset);
         }
         if(controlStation.getTrussPreset() == ControlStation.PRESSED)
         {
-            arm.moveArmTo(trussPreset);
+            arm.moveArmTo(Arm.trussPreset);
         }
         
         //Fire!!
