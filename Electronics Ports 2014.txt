@@ -1,0 +1,43 @@
+Electronics Ports 2014 Exploding Bacon
+
+Talons (Motor Ports)
+Drivetrain
+   1 talonL1
+   2 talonL2
+   3 talonR1
+   4 talonR2
+Shooter
+   5 winchTalon1
+   6 winchTalon2
+Arm
+   7 armTalon1
+   8 armTalon2
+   9 rollerTalon
+
+Solenoids (Solenoid Breakout)
+Drivetrain
+   1 solenoidShift
+Shooter
+   2 fireSolenoid
+Arm
+   3 gripperSolenoid
+
+Encoders (Digital I/O)
+Drivetrain
+   1,2 encoderL
+   3,4 encoderR
+Shooter
+   5,6 winchEncoder
+Arm
+   7,8 armEncoder
+
+Compressor (Digital I/O, Relay)
+   9,1 compressor
+
+DigitalInputs (Digital I/O)
+Shooter
+   10 winchTouchSensor
+Arm
+   11 gripperTouchSensor
+   12 topArmLimit
+   13 bottomArmLimit
