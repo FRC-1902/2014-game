@@ -13,11 +13,17 @@ public class Teleop
     Drivetrain drivetrain;
     Shooter shooter;
     Arm arm;
+    UserMessages userMessages;
     
     //Variables
     boolean hasFired = true;
     long fireStartTimeMS = 0;
     int rechargeTime = 1000;
+    
+    //User Message Variables
+    boolean shiftMessage = false;
+    boolean chargedMessage = false;
+    boolean ballMessage = false;
     
     public Teleop(ControlStation cs, Drivetrain dt, Shooter shoot, Arm a)
     {
@@ -25,6 +31,7 @@ public class Teleop
         drivetrain = dt;
         shooter = shoot;
         arm = a;
+        userMessages = new UserMessages();
     }
     
     public void init()
@@ -41,10 +48,12 @@ public class Teleop
         if(controlStation.getTrigger() == ControlStation.PRESSED)
         {
             drivetrain.shift(true);
+            shiftMessage = false;
         }
         else if(controlStation.getTrigger() == ControlStation.NOT_PRESSED)
         {
             drivetrain.shift(false);
+            shiftMessage = true;
         }
         
         //Move arm with joystick     
@@ -89,8 +98,6 @@ public class Teleop
             }
         }
         
-        
-        
         //Move the claw
         //Open
         if(controlStation.getGripperSwitch() == ControlStation.UP)
@@ -98,19 +105,25 @@ public class Teleop
             arm.setGripperSolenoid(true);
         }
         
-        
         //TODO Opperate the intake rollers
-        if(controlStation.getIntakeSwitch()== controlStation.LEFT)
+        if(controlStation.getIntakeSwitch()== ControlStation.LEFT)
         {
             arm.setIntakeRollers(1.0);
         } 
-        else if(controlStation.getIntakeSwitch() == controlStation.MIDDLE)
+        else if(controlStation.getIntakeSwitch() == ControlStation.MIDDLE)
         {
             arm.setIntakeRollers (0.0);
         }
-        else if(controlStation.getIntakeSwitch() == controlStation.RIGHT)
+        else if(controlStation.getIntakeSwitch() == ControlStation.RIGHT)
         {
             arm.setIntakeRollers (-1.0);
         }
+        
+        chargedMessage = shooter.getWinchTouchSensor();
+        ballMessage = arm.getGripperTouchSensor();
+        
+        userMessages.setDriveMessage(drivetrain.getDistance(), shiftMessage);
+        userMessages.setArmMessage(arm.getArmEncoder(), chargedMessage, ballMessage);
+        userMessages.update();
     }
 }
