@@ -5,8 +5,9 @@
  */
 
 package edu.wpi.first.wpilibj.templates;
-import edu.wpi.first.wpilibj.*;
-import java.util.*;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  *

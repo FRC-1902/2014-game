@@ -1,5 +1,9 @@
 package edu.wpi.first.wpilibj.templates;
-import edu.wpi.first.wpilibj.*;
+
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Talon;
 
 public class Drivetrain
 {    
