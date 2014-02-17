@@ -91,7 +91,7 @@ public class EMS22
      */
     public EMS22(int slot, int chSCLK, int chMOSI, int chMISO, int chCS)
     {
-        spi = new SPIDevice(slot, chSCLK, chMOSI, chMISO, chCS);
+        spi = new SPIDevice(slot, chSCLK, chMOSI, chMISO, chCS, SPIDevice.CS_ACTIVE_LOW);
         spi.setBitOrder(SPIDevice.BIT_ORDER_MSB_FIRST);
         spi.setClockPolarity(SPIDevice.CLOCK_POLARITY_ACTIVE_HIGH);
         spi.setClockRate(CLOCK_RATE_HZ);
