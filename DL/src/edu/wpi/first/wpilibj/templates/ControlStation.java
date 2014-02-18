@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class ControlStation 
 {
     
-    DriverStation control;
+ /*   DriverStation control;
     
     int fireButton = 1;//digital
     int winchButton = 2;//digital
@@ -146,4 +146,5 @@ public class ControlStation
         }
         return MIDDLE;
     }
+    */
 }

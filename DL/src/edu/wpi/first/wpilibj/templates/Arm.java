@@ -62,7 +62,6 @@ public class Arm
     
     public void setArmMotors(double arm)
     {
-        armTalon1.set(-arm);
         armTalon2.set(arm);
     }
     

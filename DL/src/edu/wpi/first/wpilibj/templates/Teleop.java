@@ -1,7 +1,7 @@
 
 
 package edu.wpi.first.wpilibj.templates;
-
+import edu.wpi.first.wpilibj.*;
 /**
  *
  * @author Developer
@@ -9,7 +9,7 @@ package edu.wpi.first.wpilibj.templates;
 public class Teleop 
 {
     
-    ControlStation controlStation;
+    //ControlStation controlStation;
     Drivetrain drivetrain;
     Shooter shooter;
     Arm arm;
@@ -24,10 +24,13 @@ public class Teleop
     boolean shiftMessage = false;
     boolean chargedMessage = false;
     boolean ballMessage = false;
+    Joystick lJoy = new Joystick(1);
+    Joystick rJoy = new Joystick(2);
+    Joystick aJoy = new Joystick(3);
     
     public Teleop(ControlStation cs, Drivetrain dt, Shooter shoot, Arm a)
     {
-        controlStation = cs;
+        //controlStation = cs;
         drivetrain = dt;
         shooter = shoot;
         arm = a;
@@ -42,26 +45,26 @@ public class Teleop
     public void runTeleop()
     {
         //Drive robot with joysticks
-        drivetrain.setPower(controlStation.getLeftJoystick(), controlStation.getRightJoystick());
+        drivetrain.setPower(lJoy.getY(), rJoy.getY());
         
         //Shifting code
-        if(controlStation.getTrigger() == ControlStation.PRESSED)
+        if(lJoy.getTrigger())
         {
             drivetrain.shift(true);
             shiftMessage = false;
         }
-        else if(controlStation.getTrigger() == ControlStation.NOT_PRESSED)
+        else if(!lJoy.getTrigger())
         {
             drivetrain.shift(false);
             shiftMessage = true;
         }
         
         //Move arm with joystick     
-        arm.setArmMotors(controlStation.getArmJoystick());
+        arm.setArmMotors(aJoy.getY()* 0.5);
         
         //Move arm with presets
         //These numbers must be tested
-        if(controlStation.getFloorPreset() == ControlStation.PRESSED)
+       /* if(controlStation.getFloorPreset() == ControlStation.PRESSED)
         {
             arm.moveArmTo(Arm.floorPreset);
         }
@@ -73,11 +76,11 @@ public class Teleop
         {
             arm.moveArmTo(Arm.trussPreset);
         }
-        
+       */ 
         //Fire!!
         if(!hasFired)
         {
-            if(controlStation.fireButton == ControlStation.PRESSED)
+            if(aJoy.getTrigger() && aJoy.getRawButton(3))
             {
                 hasFired = true;
                 fireStartTimeMS = System.currentTimeMillis();
@@ -86,7 +89,7 @@ public class Teleop
         }
         else
         {
-            if(controlStation.fireButton == ControlStation.NOT_PRESSED)
+            if(!aJoy.getTrigger())
             {
                 long elapsedTime = System.currentTimeMillis() - fireStartTimeMS;
                 if(elapsedTime > rechargeTime)
@@ -100,23 +103,27 @@ public class Teleop
         
         //Move the claw
         //Open
-        if(controlStation.getGripperSwitch() == ControlStation.UP)
+        if(aJoy.getRawButton(2))
         {
             arm.setGripperSolenoid(true);
         }
         
         //TODO Opperate the intake rollers
-        if(controlStation.getIntakeSwitch()== ControlStation.LEFT)
+        if(aJoy.getRawButton(5))
         {
             arm.setIntakeRollers(1.0);
         } 
-        else if(controlStation.getIntakeSwitch() == ControlStation.MIDDLE)
-        {
-            arm.setIntakeRollers (0.0);
-        }
-        else if(controlStation.getIntakeSwitch() == ControlStation.RIGHT)
+      //  else if(controlStation.getIntakeSwitch() == ControlStation.MIDDLE)
+      //  {
+      //      arm.setIntakeRollers (0.0);
+      //  }
+        else if(aJoy.getRawButton(4))
         {
             arm.setIntakeRollers (-1.0);
+        }
+        else
+        {
+            arm.setIntakeRollers(0.0);
         }
         
         chargedMessage = shooter.getWinchTouchSensor();
