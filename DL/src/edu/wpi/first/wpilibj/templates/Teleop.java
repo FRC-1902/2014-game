@@ -36,7 +36,7 @@ public class Teleop
     
     public void init()
     {
-        drivetrain.startDrivetrainEncoder(false);
+        //drivetrain.startDrivetrainEncoder(false);
     }
     
     public void runTeleop()
@@ -125,5 +125,6 @@ public class Teleop
         userMessages.setDriveMessage(drivetrain.getDistance(), shiftMessage);
         userMessages.setArmMessage(arm.getArmEncoder(), chargedMessage, ballMessage);
         userMessages.update();
+        
     }
 }

@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 public class AerialPig2014 extends IterativeRobot
 {
     ControlStation controlStation = new ControlStation();
-    Drivetrain drivetrain = new Drivetrain(1, 2, 3, 4, 1, 2, 3, 4, 1, 9, 1);
+    Drivetrain drivetrain = new Drivetrain(1, 2, 3, 4, 1, 2, 3, 4, 1, 1, 9);
     Shooter shooter = new Shooter(5, 6, 5, 6, 2, 10);
     Arm arm = new Arm(7, 8, 9, 7, 8, 3, 11, 12, 13);
     Teleop teleop = new Teleop(controlStation, drivetrain, shooter, arm);
@@ -30,7 +30,7 @@ public class AerialPig2014 extends IterativeRobot
     
     public void robotInit()
     {
-
+        teleop.init();
     }
     
     public void autonomousInit()
