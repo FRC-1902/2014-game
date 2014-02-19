@@ -25,7 +25,7 @@ public class Shooter
     {
         winchTalon1 = new Talon(sT1);
         winchTalon2 = new Talon(sT2);
-        winchEncoder = new Encoder(encW1, encW2);
+        //winchEncoder = new Encoder(encW1, encW2);
         fireSolenoid = new Solenoid(SolSh);
         winchTouchSensor = new DigitalInput(digIn);
     }
@@ -33,16 +33,22 @@ public class Shooter
     //Pulls back the piston for firing
     public void chargeShooter()
     {
-        if (!winchTouchSensor.get())
+        if (true /*!winchTouchSensor.get()*/)
         {
-            winchTalon1.set(1.0);
-            winchTalon2.set(1.0);
+            winchTalon1.set(0.3);
+            winchTalon2.set(0.3);
         }
         else 
         {
             winchTalon1.set(0.0);
             winchTalon2.set(0.0);
         }
+    }
+    
+    public void stopChargeShooter()
+    {
+        winchTalon1.set(0.0);
+        winchTalon2.set(0.0);
     }
     
     //Gets the encoder values for something I don't know what
@@ -75,6 +81,6 @@ public class Shooter
     
     public void setFireSolenoid(boolean fire)
     {
-        fireSolenoid.set(fire);
+        fireSolenoid.set(!fire);
     }
 }

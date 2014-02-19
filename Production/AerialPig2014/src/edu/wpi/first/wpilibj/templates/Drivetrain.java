@@ -32,10 +32,10 @@ public class Drivetrain
     
     public void setPower(double valL, double valR) 
     {
-        talonL1.set(-valL);
-        talonL2.set(-valL);
-        talonR1.set(valR);
-        talonR2.set(valR);
+        talonL1.set(valL);
+        talonL2.set(valL);
+        talonR1.set(-valR);
+        talonR2.set(-valR);
     }
 
     public double getDistance()

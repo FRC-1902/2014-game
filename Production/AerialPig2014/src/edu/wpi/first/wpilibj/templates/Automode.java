@@ -69,11 +69,11 @@ public class Automode
         else if(step == 3)
         {
             drivetrain.moveTo(moveDistance);
-            arm.moveArmTo(Arm.scorePreset);
-            if(drivetrain.getDistance() >= moveDistance && arm.getArmEncoder() <= Arm.scorePreset)
-            {
-                step++;
-            }
+            //arm.moveArmTo(Arm.scorePreset);
+//            if(drivetrain.getDistance() >= moveDistance && arm.getArmEncoder() <= Arm.scorePreset)
+//            {
+//                step++;
+//            }
         }
         else if(step == 4)
         {

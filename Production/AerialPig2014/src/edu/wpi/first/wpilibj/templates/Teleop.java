@@ -2,6 +2,8 @@
 
 package edu.wpi.first.wpilibj.templates;
 
+import edu.wpi.first.wpilibj.Watchdog;
+
 /**
  *
  * @author Developer
@@ -19,6 +21,7 @@ public class Teleop
     boolean hasFired = true;
     long fireStartTimeMS = 0;
     int rechargeTime = 1000;
+    int doubleRunCheck = 1;
     
     //User Message Variables
     boolean shiftMessage = false;
@@ -37,6 +40,10 @@ public class Teleop
     public void init()
     {
         drivetrain.startDrivetrainEncoder(false);
+        Watchdog.getInstance().setEnabled(true);
+        drivetrain.compressor.start();
+        System.out.println("Made it into teleop init " + doubleRunCheck);
+        doubleRunCheck++;
     }
     
     public void runTeleop()
@@ -57,27 +64,36 @@ public class Teleop
         }
         
         //Move arm with joystick     
-        arm.setArmMotors(controlStation.getArmJoystick());
+        double joystickPosition = controlStation.getArmJoystick();
+        arm.setArmMotors(joystickPosition);
+        if(joystickPosition < 0.1 && joystickPosition > -0.1)
+        {
+            arm.updateArmPosition();
+        }
+        else
+        {
+            arm.holdArmPosition();
+        }
         
         //Move arm with presets
         //These numbers must be tested
-        if(controlStation.getFloorPreset() == ControlStation.PRESSED)
-        {
-            arm.moveArmTo(Arm.floorPreset);
-        }
-        if(controlStation.getScorePreset() == ControlStation.PRESSED)
-        {
-            arm.moveArmTo(Arm.scorePreset);
-        }
-        if(controlStation.getTrussPreset() == ControlStation.PRESSED)
-        {
-            arm.moveArmTo(Arm.trussPreset);
-        }
+//        if(controlStation.getFloorPreset() == ControlStation.PRESSED)
+//        {
+//            arm.moveArmTo(Arm.floorPreset);
+//        }
+//        if(controlStation.getScorePreset() == ControlStation.PRESSED)
+//        {
+//            arm.moveArmTo(Arm.scorePreset);
+//        }
+//        if(controlStation.getTrussPreset() == ControlStation.PRESSED)
+//        {
+//            arm.moveArmTo(Arm.trussPreset);
+//        }
         
         //Fire!!
         if(!hasFired)
         {
-            if(controlStation.fireButton == ControlStation.PRESSED)
+            if(controlStation.getFireButton() == ControlStation.PRESSED)
             {
                 hasFired = true;
                 fireStartTimeMS = System.currentTimeMillis();
@@ -86,14 +102,14 @@ public class Teleop
         }
         else
         {
-            if(controlStation.fireButton == ControlStation.NOT_PRESSED)
+            if(controlStation.getFireButton() == ControlStation.NOT_PRESSED)
             {
                 long elapsedTime = System.currentTimeMillis() - fireStartTimeMS;
                 if(elapsedTime > rechargeTime)
                 {
                     shooter.setFireSolenoid(false);
                     hasFired = false;
-                    shooter.chargeShooter();
+                    //shooter.chargeShooter();
                 }
             }
         }
@@ -103,6 +119,10 @@ public class Teleop
         if(controlStation.getGripperSwitch() == ControlStation.UP)
         {
             arm.setGripperSolenoid(true);
+        }
+        else
+        {
+            arm.setGripperSolenoid(false);
         }
         
         //TODO Opperate the intake rollers
@@ -119,11 +139,24 @@ public class Teleop
             arm.setIntakeRollers (-1.0);
         }
         
+        if(controlStation.getWinchButton() == ControlStation.PRESSED)
+        {
+            System.out.println("Charging shooter");
+            shooter.chargeShooter();
+            
+        }
+        else
+        {            
+            shooter.stopChargeShooter();
+        }
+        
         chargedMessage = shooter.getWinchTouchSensor();
         ballMessage = arm.getGripperTouchSensor();
+        userMessages.setArmMessage(arm.getArmPosition(), false, false);
+        System.out.println("Arm Position: " + arm.getArmPosition());
         
-        userMessages.setDriveMessage(drivetrain.getDistance(), shiftMessage);
-        userMessages.setArmMessage(arm.getArmEncoder(), chargedMessage, ballMessage);
-        userMessages.update();
+        //userMessages.setDriveMessage(drivetrain.getDistance(), shiftMessage);
+        //userMessages.setArmMessage(arm.getArmEncoder(), chargedMessage, ballMessage);
+        //userMessages.update();
     }
 }

@@ -19,14 +19,14 @@ public class ControlStation
     
     DriverStation control;
     
-    int fireButton = 1;//digital
-    int winchButton = 2;//digital
-    int clawButton = 3;//digital
-    int floorPreset = 4;//digital
-    int scorePreset = 5;//digital
-    int trussPreset = 6;//digital
+    private final int fireButton = 1;//digital
+    private final int winchButton = 2;//digital
+    private final int clawButton = 3;//digital
+    private final int floorPreset = 4;//digital
+    private final int scorePreset = 5;//digital
+    private final int trussPreset = 6;//digital
     
-    int gripperSwitch = 1;//analog
+    private int gripperSwitch = 1;//analog
     
     Joystick leftJoystick;
     Joystick rightJoystick;
@@ -45,10 +45,20 @@ public class ControlStation
     public static final int MIDDLE = 0;
     public static final int RIGHT = 1;
     
+    public ControlStation(int lJoy, int rJoy, int aJoy)
+    {
+        leftJoystick = new Joystick(lJoy);
+        rightJoystick = new Joystick(rJoy);
+        armJoystick = new Joystick(aJoy);
+    }
+    
     public void init()
     {
         control = DriverStation.getInstance();
     }
+    
+    //Joystick forward returns a negative value
+    //Backwards returns a positive value
     
     public double getLeftJoystick()
     {
@@ -79,8 +89,9 @@ public class ControlStation
     
     public int getFireButton()
     {
-        if(control.getDigitalIn(fireButton))
+        if(armJoystick.getTrigger() && armJoystick.getRawButton(6))
         {
+            System.out.println("Pressing fire button");
             return PRESSED;
         }
         else
@@ -91,7 +102,7 @@ public class ControlStation
     
     public int getWinchButton()
     {
-        if(control.getDigitalIn(winchButton))
+        if(armJoystick.getRawButton(10))
         {
             return PRESSED;
         }
@@ -101,24 +112,24 @@ public class ControlStation
         }
     }
     
-    public int getFloorPreset()
-    {
-        return control.getDigitalIn(floorPreset)? PRESSED : NOT_PRESSED;
-    }
-    
-    public int getScorePreset()
-    {
-        return control.getDigitalIn(scorePreset)? PRESSED : NOT_PRESSED;
-    }
-    
-    public int getTrussPreset()
-    {
-        return control.getDigitalIn(trussPreset)? PRESSED : NOT_PRESSED;
-    }
+//    public int getFloorPreset()
+//    {
+//        return control.getDigitalIn(floorPreset)? PRESSED : NOT_PRESSED;
+//    }
+//    
+//    public int getScorePreset()
+//    {
+//        return control.getDigitalIn(scorePreset)? PRESSED : NOT_PRESSED;
+//    }
+//    
+//    public int getTrussPreset()
+//    {
+//        return control.getDigitalIn(trussPreset)? PRESSED : NOT_PRESSED;
+//    }
     
     public int getGripperSwitch()
     {
-        if(control.getDigitalIn(clawButton))
+        if(armJoystick.getRawButton(5))
         {
             return UP;
         }
@@ -131,19 +142,19 @@ public class ControlStation
     public int getIntakeSwitch()
     {
         //We need to check these values when we get the drivers station running
-        double switchValue = control.getAnalogIn(gripperSwitch);
-        if(switchValue < 0.7)
+        //double switchValue = control.getAnalogIn(gripperSwitch);
+        if(armJoystick.getRawButton(3))
         {
             return LEFT;
         }
-        else if(switchValue > 0.8 && switchValue < 2.0)
-        {
-            return MIDDLE;
-        }
-        else if(switchValue > 2.5)
+        else if(armJoystick.getRawButton(2))
         {
             return RIGHT;
         }
-        return MIDDLE;
+        else 
+        {
+            return MIDDLE;
+        }
+        //return MIDDLE;
     }
 }

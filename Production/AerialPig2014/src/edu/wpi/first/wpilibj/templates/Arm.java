@@ -6,6 +6,7 @@
 
 package edu.wpi.first.wpilibj.templates;
 
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import frc.io.util.EMS22;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -25,6 +26,7 @@ public class Arm
     DigitalInput gripperTouchSensor;
     DigitalInput topArmLimit;
     DigitalInput bottomArmLimit;
+    AnalogPotentiometer positionSensor;
     
     //TODO: These currently mean nothing!
     public static final int floorPreset = 0;
@@ -38,32 +40,34 @@ public class Arm
      * The sprocket ratio is 4.5 to 1.
      */
     private static final double ARM_ENCODER_SCALE = 1.0;
+    
+    private int holdPosition = 90;
        
-    public Arm(int armTal1, int armTal2, int rollTal, int armEnc1, int armEnc2, int gripSolenoid, int touch, int topTouch, int bottomTouch)
+    public Arm(int armTal2, int rollTal, int armEnc1, int armEnc2, int gripSolenoid, int touch, int topTouch, int bottomTouch, int pot)
     {
-        armTalon1 = new Talon(armTal1);
         armTalon2 = new Talon(armTal2);
         rollerTalon = new Talon(rollTal);
 
-        armEncoder = new EMS22(
-            IOConfig.SIDECAR_SLOT,
-            IOConfig.SPI_SCLK,
-            IOConfig.SPI_MOSI,
-            IOConfig.SPI_MISO,
-            IOConfig.SPI_CS1);
-        armEncoder.setScaleFactor(ARM_ENCODER_SCALE);
+//        armEncoder = new EMS22(
+//            IOConfig.SIDECAR_SLOT,
+//            IOConfig.SPI_SCLK,
+//            IOConfig.SPI_MOSI,
+//            IOConfig.SPI_MISO,
+//            IOConfig.SPI_CS1);
+//        armEncoder.setScaleFactor(ARM_ENCODER_SCALE);
         
         gripperSolenoid = new Solenoid(gripSolenoid);
         
         gripperTouchSensor = new DigitalInput(touch);
         topArmLimit = new DigitalInput(topTouch);
         bottomArmLimit = new DigitalInput(bottomTouch);
+        
+        positionSensor = new AnalogPotentiometer(pot);
     }
     
     public void setArmMotors(double arm)
     {
-        armTalon1.set(-arm);
-        armTalon2.set(arm);
+        armTalon2.set(-arm);
     }
     
     public void setIntakeRollers(double roll)
@@ -99,17 +103,43 @@ public class Arm
     {
     }
     
-    public int getArmEncoder()
+    public int getArmPosition()
     {
-        EMS22.EncoderResult result = armEncoder.get();
-        return result.rawValue;
+        final double minV = 2.52;
+        final double maxV = 3.0;
+        final double vRange = maxV - minV;
+        final double angleOffSet = -22.93;
+        final double angleRange = 90 - angleOffSet;
+        double angleRatio = (positionSensor.get() - minV) / vRange;
+        return (int)(angleRatio * angleRange + angleOffSet);
     }
+    
+    public void holdArmPosition()
+    {
+        holdPosition = getArmPosition();
+    }
+    
+    public void updateArmPosition()
+    {
+        int currentPosition = getArmPosition();
+        final int tolerance = 2;
+        if(currentPosition > (holdPosition + tolerance) || currentPosition < (holdPosition - tolerance))
+        {
+            moveArmTo(holdPosition);
+        }
+    }
+    
+//    public int getArmEncoder()
+//    {
+//        EMS22.EncoderResult result = armEncoder.get();
+//        return result.rawValue;
+//    }
     
     //THIS MUST BE TESTED
     public void moveArmTo(int targetPosition)
     {
-        double p = 0.05; //TODO:This needs to be tuned
-        double error = targetPosition - getArmEncoder();
+        double p = 0.075; //TODO:This needs to be tuned
+        double error = targetPosition - getArmPosition();
         
         error *= p;
         
