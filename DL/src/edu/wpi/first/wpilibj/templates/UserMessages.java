@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 
 
 public class UserMessages {
-    StringBuffer errorMessage;
-    StringBuffer armMessage;
-    StringBuffer driveMessage;
-    String logMessageLine1;
-    String logMessageLine2;
-    String logMessageLine3;
+    StringBuffer errorMessage = new StringBuffer("");
+    StringBuffer armMessage   = new StringBuffer("");
+    StringBuffer driveMessage = new StringBuffer("");
+    String logMessageLine1    = "";
+    String logMessageLine2    = "";
+    String logMessageLine3    = "";
     
     DriverStationLCD messageScreen = DriverStationLCD.getInstance();
     
