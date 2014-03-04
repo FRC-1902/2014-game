@@ -5,7 +5,12 @@
  */
 
 package edu.wpi.first.wpilibj.templates;
-import edu.wpi.first.wpilibj.*;
+
+import frc.io.util.EMS22;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Solenoid;
+
 /**
  *
  * @author Developer
@@ -16,7 +21,7 @@ public class Arm
     Talon armTalon2;
     Talon rollerTalon;
     Solenoid gripperSolenoid;
-    Encoder armEncoder;
+    EMS22 armEncoder;
     DigitalInput gripperTouchSensor;
     DigitalInput topArmLimit;
     DigitalInput bottomArmLimit;
@@ -26,13 +31,27 @@ public class Arm
     public static final int scorePreset = 50;
     public static final int trussPreset = 75;
     
+    // TODO: work out what we may need to do to handle the possibility of a wrap
+    // around since if we move 120 degrees at 4.5:1 it is 1.09 revolutions.
+
+    /** Scale factor to convert encoder position to degrees.
+     * The sprocket ratio is 4.5 to 1.
+     */
+    private static final double ARM_ENCODER_SCALE = 1.0;
+       
     public Arm(int armTal1, int armTal2, int rollTal, int armEnc1, int armEnc2, int gripSolenoid, int touch, int topTouch, int bottomTouch)
     {
         armTalon1 = new Talon(armTal1);
         armTalon2 = new Talon(armTal2);
         rollerTalon = new Talon(rollTal);
-        
-        armEncoder = new Encoder(armEnc1, armEnc2);
+
+        armEncoder = new EMS22(
+            IOConfig.SIDECAR_SLOT,
+            IOConfig.SPI_SCLK,
+            IOConfig.SPI_MOSI,
+            IOConfig.SPI_MISO,
+            IOConfig.SPI_CS1);
+        armEncoder.setScaleFactor(ARM_ENCODER_SCALE);
         
         gripperSolenoid = new Solenoid(gripSolenoid);
         
@@ -43,7 +62,6 @@ public class Arm
     
     public void setArmMotors(double arm)
     {
-        armTalon1.set(-arm);
         armTalon2.set(arm);
     }
     
@@ -74,24 +92,16 @@ public class Arm
     
     public void startArmEncoder(boolean setEnc)
     {
-        if(setEnc)
-        {
-            armEncoder.start();
-        }
-        else if(!setEnc)
-        {
-            armEncoder.stop();
-        }
     }
     
     public void resetArmEncoder()
     {
-        armEncoder.reset();
     }
     
     public int getArmEncoder()
     {
-        return armEncoder.get();
+        EMS22.EncoderResult result = armEncoder.get();
+        return result.rawValue;
     }
     
     //THIS MUST BE TESTED

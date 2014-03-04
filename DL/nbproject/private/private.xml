@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
         <group>
             <file>file:/C:/Users/Tyler/projects/2014-game/DL/src/edu/wpi/first/wpilibj/templates/Drivetrain.java</file>
             <file>file:/C:/Users/Tyler/projects/2014-game/DL/src/edu/wpi/first/wpilibj/templates/Automode.java</file>
@@ -13,5 +14,8 @@
             <file>file:/C:/Users/Tyler/projects/2014-game/DL/src/edu/wpi/first/wpilibj/templates/Arm.java</file>
             <file>file:/C:/Users/Tyler/projects/2014-game/DL/src/edu/wpi/first/wpilibj/templates/Teleop.java</file>
         </group>
+=======
+        <group/>
+>>>>>>> a11d22d6049b3bccd9b9bba5fb1c0b7a3385375a
     </open-files>
 </project-private>

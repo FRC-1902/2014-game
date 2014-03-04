@@ -1,11 +1,14 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Shooter for launching the ball.
  */
 
 package edu.wpi.first.wpilibj.templates;
-import edu.wpi.first.wpilibj.*;
+
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DigitalInput;
+
 /**
  *
  * @author Developer

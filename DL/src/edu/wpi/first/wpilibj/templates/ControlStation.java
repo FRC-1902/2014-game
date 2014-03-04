@@ -5,8 +5,9 @@
  */
 
 package edu.wpi.first.wpilibj.templates;
-import edu.wpi.first.wpilibj.*;
-import java.util.*;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  *
@@ -16,7 +17,7 @@ import java.util.*;
 public class ControlStation 
 {
     
-    DriverStation control;
+ /*   DriverStation control;
     
     int fireButton = 1;//digital
     int winchButton = 2;//digital
@@ -145,4 +146,5 @@ public class ControlStation
         }
         return MIDDLE;
     }
+    */
 }
