@@ -89,7 +89,7 @@ public class ControlStation
     
     public int getFireButton()
     {
-        if(armJoystick.getTrigger() && armJoystick.getRawButton(6))
+        if(armJoystick.getTrigger())
         {
             System.out.println("Pressing fire button");
             return PRESSED;
@@ -102,7 +102,7 @@ public class ControlStation
     
     public int getWinchButton()
     {
-        if(armJoystick.getRawButton(10))
+        if(armJoystick.getRawButton(4))
         {
             return PRESSED;
         }

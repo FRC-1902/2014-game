@@ -105,8 +105,8 @@ public class Arm
     
     public int getArmPosition()
     {
-        final double minV = 2.52;
-        final double maxV = 3.0;
+        final double minV = 2.35;
+        final double maxV = 4.07;
         final double vRange = maxV - minV;
         final double angleOffSet = -22.93;
         final double angleRange = 90 - angleOffSet;
@@ -119,6 +119,11 @@ public class Arm
         holdPosition = getArmPosition();
     }
     
+    public int getHoldPosition()
+    {
+        return holdPosition;
+    }
+    
     public void updateArmPosition()
     {
         int currentPosition = getArmPosition();
@@ -129,6 +134,8 @@ public class Arm
         }
     }
     
+    
+    
 //    public int getArmEncoder()
 //    {
 //        EMS22.EncoderResult result = armEncoder.get();
@@ -138,10 +145,18 @@ public class Arm
     //THIS MUST BE TESTED
     public void moveArmTo(int targetPosition)
     {
-        double p = 0.075; //TODO:This needs to be tuned
+        double p = 0.1; //TODO:This needs to be tuned
         double error = targetPosition - getArmPosition();
         
         error *= p;
+        if(error > 1.0)
+        {
+            error = 1.0;
+        }
+        else if(error < -1.0)
+        {
+            error = -1.0;
+        }
         
         setArmMotors(error);
     }

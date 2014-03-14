@@ -33,8 +33,6 @@ public class Automode
     {
         drivetrain.startDrivetrainEncoder(true);
         drivetrain.resetDrivetrainEncoder();
-        shooter.startWinchEncoder(true);
-        shooter.resetWinchEncoder();
         arm.startArmEncoder(true);
         arm.resetArmEncoder();
         
@@ -70,10 +68,10 @@ public class Automode
         {
             drivetrain.moveTo(moveDistance);
             //arm.moveArmTo(Arm.scorePreset);
-//            if(drivetrain.getDistance() >= moveDistance && arm.getArmEncoder() <= Arm.scorePreset)
-//            {
-//                step++;
-//            }
+            if(drivetrain.getDistance() >= moveDistance)
+            {
+                step++;
+            }
         }
         else if(step == 4)
         {

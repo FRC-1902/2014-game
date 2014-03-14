@@ -21,13 +21,14 @@ public class IOConfig
     public static final int SPI_MISO            = Digital.GPIO2;
     public static final int SPI_SCLK            = Digital.GPIO3;
     public static final int SPI_CS1             = Digital.GPIO4;
-    public static final int SHOOTER_TOUCH       = Digital.GPIO10;
-    public static final int GRIPPER_TOUCH       = Digital.GPIO11;
+    public static final int SHOOTER_TOUCH       = Digital.GPIO11;
+    public static final int GRIPPER_TOUCH       = Digital.GPIO10;
     public static final int ARM_LIMIT_TOP       = Digital.GPIO12;
     public static final int ARM_LIMIT_BOTTOM    = Digital.GPIO13;
     public static final int SHOOTER_PWM_1       = Digital.PWM5;
     public static final int SHOOTER_PWM_2       = Digital.PWM6;
     public static final int SHOOTER_FIRE        = Digital.RELAY2;
+    public static final int SHOOTER_FIRE_SAFE   = Digital.RELAY4;
 
     // --- Drivetrain ---
     public static final int DRIVE_ENCODER_L1    = Digital.GPIO5;

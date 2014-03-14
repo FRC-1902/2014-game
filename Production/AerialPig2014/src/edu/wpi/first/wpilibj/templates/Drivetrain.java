@@ -92,7 +92,7 @@ public class Drivetrain
         
         error *= p;
         
-        setPower(error, error);
+        setPower(-error, -error);
     }
 }
 

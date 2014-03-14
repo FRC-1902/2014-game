@@ -18,7 +18,7 @@ public class Teleop
     UserMessages userMessages;
     
     //Variables
-    boolean hasFired = true;
+    boolean hasFired = false;
     long fireStartTimeMS = 0;
     int rechargeTime = 1000;
     int doubleRunCheck = 1;
@@ -66,7 +66,7 @@ public class Teleop
         //Move arm with joystick     
         double joystickPosition = controlStation.getArmJoystick();
         arm.setArmMotors(joystickPosition);
-        if(joystickPosition < 0.1 && joystickPosition > -0.1)
+        if(joystickPosition > 0.1 && joystickPosition < -0.1)
         {
             arm.updateArmPosition();
         }
@@ -74,6 +74,8 @@ public class Teleop
         {
             arm.holdArmPosition();
         }
+        
+        System.out.println("Arm Hold Position: " + arm.getArmPosition());
         
         //Move arm with presets
         //These numbers must be tested
@@ -109,10 +111,11 @@ public class Teleop
                 {
                     shooter.setFireSolenoid(false);
                     hasFired = false;
-                    //shooter.chargeShooter();
+                    
                 }
             }
         }
+        System.out.println("Touch Sensor: " + shooter.winchTouchSensor.get());
         
         //Move the claw
         //Open
