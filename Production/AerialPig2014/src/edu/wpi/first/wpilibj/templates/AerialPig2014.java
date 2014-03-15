@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.Watchdog;
 public class AerialPig2014 extends IterativeRobot
 {
     ControlStation controlStation = new ControlStation(1, 2, 3);
-    Drivetrain drivetrain = new Drivetrain(1, 2, 3, 4, 1, 2, 3, 4, 1, 1, 9);
+    Drivetrain drivetrain = new Drivetrain(IOConfig.DRIVE_PWM_L1, IOConfig.DRIVE_PWM_L2, IOConfig.DRIVE_PWM_R1, IOConfig.DRIVE_PWM_R2, IOConfig.DRIVE_ENCODER_L1, IOConfig.DRIVE_ENCODER_L2, IOConfig.DRIVE_ENCODER_R1, IOConfig.DRIVE_ENCODER_R2, 1, 1, 9);
     Shooter shooter = new Shooter(IOConfig.SHOOTER_PWM_1, IOConfig.SHOOTER_PWM_2, 0, 0, IOConfig.SHOOTER_FIRE, IOConfig.SHOOTER_FIRE_SAFE, IOConfig.SHOOTER_TOUCH, 5);
     Arm arm = new Arm(8, 9, 7, 8, 3, 10, 12, 13, 1);
     Teleop teleop = new Teleop(controlStation, drivetrain, shooter, arm);
@@ -46,6 +46,8 @@ public class AerialPig2014 extends IterativeRobot
     public void disabledInit()
     {
         System.out.println("disabledinit");
+        drivetrain.startDrivetrainEncoder(true);
+        drivetrain.resetDrivetrainEncoder();
     }
     
     public void autonomousInit()
@@ -53,7 +55,7 @@ public class AerialPig2014 extends IterativeRobot
         automode.init();
         System.out.println("Autoinit");
     }
-
+    
     public void disabledPeriodic()  {
 		// feed the user watchdog at every period when disabled
 		Watchdog.getInstance().feed();
@@ -68,7 +70,9 @@ public class AerialPig2014 extends IterativeRobot
 //			System.out.println("Disabled seconds: " + (printSec - startSec));
 //			printSec++;
 //		}
-                System.out.println("Arm pot: " + arm.positionSensor.get());
+                System.out.println("Arm pot: " + arm.positionSensor.get() + " Arm angle: " + 
+                        arm.getArmPosition() + " Drive encoder R/L: " + drivetrain.getEncR() + 
+                        "/" + drivetrain.getEncL() + " ft: " + drivetrain.getDistance());
 	}
     
     public void autonomousPeriodic()

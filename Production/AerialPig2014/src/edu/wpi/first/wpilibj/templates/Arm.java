@@ -11,6 +11,7 @@ import frc.io.util.EMS22;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
+import java.lang.Math;
 
 /**
  *
@@ -29,9 +30,10 @@ public class Arm
     AnalogPotentiometer positionSensor;
     
     //TODO: These currently mean nothing!
-    public static final int floorPreset = 0;
-    public static final int scorePreset = 50;
-    public static final int trussPreset = 75;
+    public static final double floorPreset = 0.0;
+    public static final double scorePreset = 32.0;
+    public static final double trussPreset = 57.0;
+    public static final double autoScorePreset = 31.0;
     
     // TODO: work out what we may need to do to handle the possibility of a wrap
     // around since if we move 120 degrees at 4.5:1 it is 1.09 revolutions.
@@ -41,7 +43,7 @@ public class Arm
      */
     private static final double ARM_ENCODER_SCALE = 1.0;
     
-    private int holdPosition = 90;
+    private double holdPosition = 90;
        
     public Arm(int armTal2, int rollTal, int armEnc1, int armEnc2, int gripSolenoid, int touch, int topTouch, int bottomTouch, int pot)
     {
@@ -105,8 +107,8 @@ public class Arm
     
     public int getArmPosition()
     {
-        final double minV = 2.35;
-        final double maxV = 4.07;
+        final double minV = 1.41;
+        final double maxV = 3.21;
         final double vRange = maxV - minV;
         final double angleOffSet = -22.93;
         final double angleRange = 90 - angleOffSet;
@@ -119,9 +121,15 @@ public class Arm
         holdPosition = getArmPosition();
     }
     
-    public int getHoldPosition()
+    public double getHoldPosition()
     {
         return holdPosition;
+    }
+    
+    public void setHoldPosition(double angle)
+    {
+        holdPosition = angle;
+        moveArmTo(holdPosition);
     }
     
     public void updateArmPosition()
@@ -132,6 +140,11 @@ public class Arm
         {
             moveArmTo(holdPosition);
         }
+        else
+        {
+            setArmMotors(0.0);
+        }
+        
     }
     
     
@@ -143,9 +156,9 @@ public class Arm
 //    }
     
     //THIS MUST BE TESTED
-    public void moveArmTo(int targetPosition)
+    public void moveArmTo(double targetPosition)
     {
-        double p = 0.1; //TODO:This needs to be tuned
+        double p = 0.05; //TODO:This needs to be tuned
         double error = targetPosition - getArmPosition();
         
         error *= p;
@@ -156,6 +169,11 @@ public class Arm
         else if(error < -1.0)
         {
             error = -1.0;
+        }
+        
+        if(Math.abs(error) < 0.1)
+        {
+            error = 0;
         }
         
         setArmMotors(error);
