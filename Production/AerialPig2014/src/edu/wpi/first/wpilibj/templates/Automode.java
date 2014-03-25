@@ -17,10 +17,12 @@ public class Automode
     Arm arm;
     
     //Variables
-    int step = 0;
+    int step = 4;
     long autoStartTimeMS = 0;
     long currentAutoTimeMS = 0;
-    int moveDistance = 3;
+    double moveDistance = 4;
+    //TODO: make camera work good
+    boolean isHotGoal = true;
     
     public Automode(Drivetrain dt, Shooter shoot, Arm a)
     {
@@ -33,20 +35,21 @@ public class Automode
     {
         drivetrain.startDrivetrainEncoder(true);
         drivetrain.resetDrivetrainEncoder();
-        shooter.startWinchEncoder(true);
-        shooter.resetWinchEncoder();
         arm.startArmEncoder(true);
         arm.resetArmEncoder();
         
+        shooter.setFireSolenoid(false);
         autoStartTimeMS = System.currentTimeMillis();
     }
     
     public void runAutomode()
     {
+        System.out.println("Step: " + step);
         //TODO: Auto must be tested and tuned
         if(step == 0)
         {
-            arm.setGripperSolenoid(true);
+            shooter.chargeShooter();
+            arm.setHoldPosition(Arm.autoScorePreset);
             
             if(getTime() >= 800)
             {
@@ -55,30 +58,44 @@ public class Automode
         }
         else if(step == 1)
         {
-                arm.setGripperSolenoid(false);
-                step++;
+            arm.updateArmPosition();
+            arm.setGripperSolenoid(true);
+            if(getTime() >= 1300)
+            {
+               step++; 
+            }
         }
         else if(step == 2)
         {
             //TODO:if camera
-            if(getTime() >= 5000)
+            arm.updateArmPosition();
+            if(isHotGoal || getTime() >= 5000)
             {
                 step++;
             }
         }
         else if(step == 3)
         {
-            drivetrain.moveTo(moveDistance);
-            //arm.moveArmTo(Arm.scorePreset);
-//            if(drivetrain.getDistance() >= moveDistance && arm.getArmEncoder() <= Arm.scorePreset)
-//            {
-//                step++;
-//            }
+            arm.updateArmPosition();
+            shooter.setFireSolenoid(true);
+            if(getTime() >= 2500)
+            {
+                step++;
+                drivetrain.resetDrivetrainEncoder();
+            }
         }
         else if(step == 4)
         {
-            shooter.setFireSolenoid(true);
+            if(getTime() > 8000)
+            {
+                drivetrain.moveTo(moveDistance);
+                if(drivetrain.getDistance() >= moveDistance)
+                {
+                    step++;
+                }
+            }
         }
+        
     }
     
     public long getTime()

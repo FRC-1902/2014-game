@@ -17,36 +17,86 @@ public class Shooter
 {    
     Talon winchTalon1;
     Talon winchTalon2;
-    Solenoid fireSolenoid;
+    Solenoid fireSolenoidShoot;
+    Solenoid fireSolenoidSafe;
+    Solenoid winchTouchPower;
     Encoder winchEncoder;
     DigitalInput winchTouchSensor;
+    
+    int chargeStep = 0;
+    long chargeTime = 0;
+    
+    
 
-    public Shooter(int sT1, int sT2, int encW1, int encW2, int SolSh, int digIn)
+    public Shooter(int sT1, int sT2, int encW1, int encW2, int SolSh1, int SolSh2, int digIn, int touchPower)
     {
         winchTalon1 = new Talon(sT1);
         winchTalon2 = new Talon(sT2);
         //winchEncoder = new Encoder(encW1, encW2);
-        fireSolenoid = new Solenoid(SolSh);
+        fireSolenoidShoot = new Solenoid(SolSh1);
+        fireSolenoidSafe = new Solenoid(SolSh2);
         winchTouchSensor = new DigitalInput(digIn);
+        winchTouchPower = new Solenoid(touchPower);
+        
+        setFireSolenoid(false);
     }
     
     //Pulls back the piston for firing
-    public void chargeShooter()
+    public boolean chargeShooter()
     {
-        if (true /*!winchTouchSensor.get()*/)
+        
+        if (winchTouchSensor.get())
         {
-            winchTalon1.set(0.3);
-            winchTalon2.set(0.3);
+            winchTalon1.set(1.0);
+            winchTalon2.set(1.0);
+            return false;
         }
         else 
         {
             winchTalon1.set(0.0);
             winchTalon2.set(0.0);
+            return true;
+        }
+    }
+    
+    public void process()
+    {
+        if(chargeStep == 0)
+        {
+            return;
+        }
+        boolean done = chargeShooter();
+        if(chargeStep == 1)
+        {
+            chargeTime = System.currentTimeMillis();
+            nextChargeStep();
+        }
+        else if(chargeStep == 2)
+        {
+                setFireSolenoid(false);
+                nextChargeStep();  
+        }
+        else if(chargeStep == 3 && done)
+        {
+            stopChargeStep();
+        }
+    }
+    
+    public void startChargeShooter()
+    {
+        if(chargeStep == 0)
+        {
+            System.out.println("Charging shooter");
+            nextChargeStep();
         }
     }
     
     public void stopChargeShooter()
     {
+        if(chargeStep > 0)
+        {
+            stopChargeStep();
+        }
         winchTalon1.set(0.0);
         winchTalon2.set(0.0);
     }
@@ -81,6 +131,19 @@ public class Shooter
     
     public void setFireSolenoid(boolean fire)
     {
-        fireSolenoid.set(!fire);
+        fireSolenoidShoot.set(fire);
+        fireSolenoidSafe.set(!fire);
+    }
+    
+    private void nextChargeStep()
+    {
+        chargeStep++;
+        System.out.println("chargeStep: " + chargeStep);
+    }
+    
+    private void stopChargeStep()
+    {
+        chargeStep = 0;
+        System.out.println("ChargeStep is stoppd");
     }
 }

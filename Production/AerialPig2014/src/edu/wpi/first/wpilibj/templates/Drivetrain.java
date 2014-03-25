@@ -16,6 +16,10 @@ public class Drivetrain
     Encoder encoderR;
     Compressor compressor;
     
+    final static double COUNTS_PER_REVOLUTION = 249.0;
+    final static double FEET_PER_REVOLUTION = 18.84/12; //inches to feet
+    final static double FEET_PER_COUNT = FEET_PER_REVOLUTION/COUNTS_PER_REVOLUTION; 
+    
     public Drivetrain(int tL1, int tL2, int tR1, int tR2, int encL1, int encL2, int encR1, int encR2, int solShift1, int compSpike, int compSwitch)
     {
         talonL1 = new Talon(tL1);
@@ -40,8 +44,8 @@ public class Drivetrain
 
     public double getDistance()
     {
-        return ((getEncL() * 1) +  (-getEncR() * 1)) / 2;
-        // switch 1's to conversion factors after testing
+        double averageCount = (getEncL() +  getEncR()) / 2;
+        return averageCount * FEET_PER_COUNT;
     }
 
     public void resetDrivetrainEncoder()
@@ -66,7 +70,7 @@ public class Drivetrain
 
     public int getEncR()
     {
-        return encoderR.get();
+        return -encoderR.get();
     }
 
     public int getEncL()
@@ -85,14 +89,14 @@ public class Drivetrain
     }
     
     //TODO: This must be tested and tuned
-    public void moveTo(int targetPosition)
+    public void moveTo(double targetPosition)
     {
-        double p = 0.05;
+        double p = 0.25;
         double error = targetPosition - getDistance();
         
         error *= p;
         
-        setPower(error, error);
+        setPower(-error, -error);
     }
 }
 

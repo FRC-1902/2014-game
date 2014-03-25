@@ -89,7 +89,7 @@ public class ControlStation
     
     public int getFireButton()
     {
-        if(armJoystick.getTrigger() && armJoystick.getRawButton(6))
+        if(armJoystick.getTrigger())
         {
             System.out.println("Pressing fire button");
             return PRESSED;
@@ -102,7 +102,7 @@ public class ControlStation
     
     public int getWinchButton()
     {
-        if(armJoystick.getRawButton(10))
+        if(armJoystick.getRawButton(4))
         {
             return PRESSED;
         }
@@ -117,15 +117,15 @@ public class ControlStation
 //        return control.getDigitalIn(floorPreset)? PRESSED : NOT_PRESSED;
 //    }
 //    
-//    public int getScorePreset()
-//    {
-//        return control.getDigitalIn(scorePreset)? PRESSED : NOT_PRESSED;
-//    }
-//    
-//    public int getTrussPreset()
-//    {
-//        return control.getDigitalIn(trussPreset)? PRESSED : NOT_PRESSED;
-//    }
+    public int getScorePreset()
+    {
+        return armJoystick.getRawButton(6) ? PRESSED : NOT_PRESSED;
+    }
+    
+    public int getTrussPreset()
+    {
+        return armJoystick.getRawButton(7) ? PRESSED : NOT_PRESSED;
+    }
     
     public int getGripperSwitch()
     {

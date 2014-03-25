@@ -18,7 +18,7 @@ public class Teleop
     UserMessages userMessages;
     
     //Variables
-    boolean hasFired = true;
+    boolean hasFired = false;
     long fireStartTimeMS = 0;
     int rechargeTime = 1000;
     int doubleRunCheck = 1;
@@ -27,6 +27,7 @@ public class Teleop
     boolean shiftMessage = false;
     boolean chargedMessage = false;
     boolean ballMessage = false;
+    boolean isCharging = false;
     
     public Teleop(ControlStation cs, Drivetrain dt, Shooter shoot, Arm a)
     {
@@ -39,7 +40,8 @@ public class Teleop
     
     public void init()
     {
-        drivetrain.startDrivetrainEncoder(false);
+        drivetrain.startDrivetrainEncoder(true);
+        drivetrain.resetDrivetrainEncoder();
         Watchdog.getInstance().setEnabled(true);
         drivetrain.compressor.start();
         System.out.println("Made it into teleop init " + doubleRunCheck);
@@ -66,14 +68,18 @@ public class Teleop
         //Move arm with joystick     
         double joystickPosition = controlStation.getArmJoystick();
         arm.setArmMotors(joystickPosition);
-        if(joystickPosition < 0.1 && joystickPosition > -0.1)
-        {
-            arm.updateArmPosition();
-        }
-        else
-        {
-            arm.holdArmPosition();
-        }
+        
+//        if(joystickPosition < 0.0 && )
+//        if(joystickPosition > 0.1 && joystickPosition < -0.1)
+//        {
+//            arm.updateArmPosition();
+//        }
+//        else
+//        {
+//            arm.holdArmPosition();
+//        }
+        
+        //System.out.println("Arm Position: " + arm.getArmPosition());
         
         //Move arm with presets
         //These numbers must be tested
@@ -81,38 +87,40 @@ public class Teleop
 //        {
 //            arm.moveArmTo(Arm.floorPreset);
 //        }
-//        if(controlStation.getScorePreset() == ControlStation.PRESSED)
-//        {
-//            arm.moveArmTo(Arm.scorePreset);
-//        }
-//        if(controlStation.getTrussPreset() == ControlStation.PRESSED)
-//        {
-//            arm.moveArmTo(Arm.trussPreset);
-//        }
+        if(controlStation.getScorePreset() == ControlStation.PRESSED)
+        {
+            arm.setHoldPosition(Arm.scorePreset);
+            
+        }
+        if(controlStation.getTrussPreset() == ControlStation.PRESSED)
+        {
+            arm.moveArmTo(Arm.trussPreset);
+        }
         
         //Fire!!
         if(!hasFired)
         {
             if(controlStation.getFireButton() == ControlStation.PRESSED)
             {
-                hasFired = true;
-                fireStartTimeMS = System.currentTimeMillis();
+//                hasFired = true;
+                //fireStartTimeMS = System.currentTimeMillis();
                 shooter.setFireSolenoid(true);
             }
         }
         else
         {
-            if(controlStation.getFireButton() == ControlStation.NOT_PRESSED)
-            {
-                long elapsedTime = System.currentTimeMillis() - fireStartTimeMS;
-                if(elapsedTime > rechargeTime)
-                {
-                    shooter.setFireSolenoid(false);
-                    hasFired = false;
-                    //shooter.chargeShooter();
-                }
-            }
+//            if(controlStation.getFireButton() == ControlStation.NOT_PRESSED)
+//            {
+//                long elapsedTime = System.currentTimeMillis() - fireStartTimeMS;
+//                if(elapsedTime > rechargeTime)
+//                {
+//                    shooter.setFireSolenoid(false);
+//                    hasFired = false;
+//                    
+//                }
+//            }
         }
+        //System.out.println("Touch Sensor: " + shooter.winchTouchSensor.get());
         
         //Move the claw
         //Open
@@ -141,19 +149,24 @@ public class Teleop
         
         if(controlStation.getWinchButton() == ControlStation.PRESSED)
         {
-            System.out.println("Charging shooter");
-            shooter.chargeShooter();
-            
+            if(!isCharging)
+            {
+                isCharging = true;
+                shooter.startChargeShooter();
+            }
         }
         else
-        {            
+        {         
+            isCharging = false;
             shooter.stopChargeShooter();
         }
         
         chargedMessage = shooter.getWinchTouchSensor();
         ballMessage = arm.getGripperTouchSensor();
         userMessages.setArmMessage(arm.getArmPosition(), false, false);
-        System.out.println("Arm Position: " + arm.getArmPosition());
+//        System.out.println("Arm Position: " + arm.getArmPosition());
+        
+        shooter.process();
         
         //userMessages.setDriveMessage(drivetrain.getDistance(), shiftMessage);
         //userMessages.setArmMessage(arm.getArmEncoder(), chargedMessage, ballMessage);
