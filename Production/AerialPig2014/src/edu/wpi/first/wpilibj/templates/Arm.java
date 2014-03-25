@@ -31,9 +31,9 @@ public class Arm
     
     //TODO: These currently mean nothing!
     public static final double floorPreset = 0.0;
-    public static final double scorePreset = 32.0;
+    public static final double scorePreset = 34.0;
     public static final double trussPreset = 57.0;
-    public static final double autoScorePreset = 31.0;
+    public static final double autoScorePreset = 39.0;
     
     // TODO: work out what we may need to do to handle the possibility of a wrap
     // around since if we move 120 degrees at 4.5:1 it is 1.09 revolutions.
@@ -107,8 +107,8 @@ public class Arm
     
     public int getArmPosition()
     {
-        final double minV = 1.41;
-        final double maxV = 3.21;
+        final double minV = 1.34;
+        final double maxV = 3.12;
         final double vRange = maxV - minV;
         final double angleOffSet = -22.93;
         final double angleRange = 90 - angleOffSet;
@@ -135,7 +135,7 @@ public class Arm
     public void updateArmPosition()
     {
         int currentPosition = getArmPosition();
-        final int tolerance = 2;
+        final int tolerance = 1;
         if(currentPosition > (holdPosition + tolerance) || currentPosition < (holdPosition - tolerance))
         {
             moveArmTo(holdPosition);

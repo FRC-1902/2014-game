@@ -17,7 +17,7 @@ public class Automode
     Arm arm;
     
     //Variables
-    int step = 0;
+    int step = 4;
     long autoStartTimeMS = 0;
     long currentAutoTimeMS = 0;
     double moveDistance = 4;
@@ -86,10 +86,13 @@ public class Automode
         }
         else if(step == 4)
         {
-            drivetrain.moveTo(moveDistance);
-            if(drivetrain.getDistance() >= moveDistance)
+            if(getTime() > 8000)
             {
-                step++;
+                drivetrain.moveTo(moveDistance);
+                if(drivetrain.getDistance() >= moveDistance)
+                {
+                    step++;
+                }
             }
         }
         
