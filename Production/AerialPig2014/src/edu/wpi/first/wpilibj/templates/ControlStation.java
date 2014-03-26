@@ -30,7 +30,8 @@ public class ControlStation
     
     Joystick leftJoystick;
     Joystick rightJoystick;
-    Joystick armJoystick;
+    Joystick armJoystickR;
+    Joystick armJoystickL;
     
     
     
@@ -45,11 +46,12 @@ public class ControlStation
     public static final int MIDDLE = 0;
     public static final int RIGHT = 1;
     
-    public ControlStation(int lJoy, int rJoy, int aJoy)
+    public ControlStation(int lJoy, int rJoy, int aJoy, int aJoy2)
     {
         leftJoystick = new Joystick(lJoy);
         rightJoystick = new Joystick(rJoy);
-        armJoystick = new Joystick(aJoy);
+        armJoystickR = new Joystick(aJoy);
+        armJoystickL = new Joystick(aJoy2);
     }
     
     public void init()
@@ -72,7 +74,7 @@ public class ControlStation
     
     public double getArmJoystick()
     {
-        return armJoystick.getY();
+        return armJoystickR.getY();
     }
     
     public int getTrigger()
@@ -89,7 +91,7 @@ public class ControlStation
     
     public int getFireButton()
     {
-        if(armJoystick.getTrigger())
+        if(armJoystickR.getTrigger() && armJoystickL.getTrigger())
         {
             System.out.println("Pressing fire button");
             return PRESSED;
@@ -102,7 +104,7 @@ public class ControlStation
     
     public int getWinchButton()
     {
-        if(armJoystick.getRawButton(4))
+        if(armJoystickL.getRawButton(4))
         {
             return PRESSED;
         }
@@ -119,17 +121,27 @@ public class ControlStation
 //    
     public int getScorePreset()
     {
-        return armJoystick.getRawButton(6) ? PRESSED : NOT_PRESSED;
+        return armJoystickR.getRawButton(2) ? PRESSED : NOT_PRESSED;
     }
     
     public int getTrussPreset()
     {
-        return armJoystick.getRawButton(7) ? PRESSED : NOT_PRESSED;
+        return armJoystickR.getRawButton(3) ? PRESSED : NOT_PRESSED;
+    }
+    
+    public int getHotKeyPreset()
+    {
+        return armJoystickL.getRawButton(5) ? PRESSED : NOT_PRESSED;
+    }
+       
+    public int setHotKeyPreset()
+    {
+        return armJoystickR.getRawButton(4) ? PRESSED : NOT_PRESSED;
     }
     
     public int getGripperSwitch()
     {
-        if(armJoystick.getRawButton(5))
+        if(armJoystickR.getRawButton(5))
         {
             return UP;
         }
@@ -143,11 +155,11 @@ public class ControlStation
     {
         //We need to check these values when we get the drivers station running
         //double switchValue = control.getAnalogIn(gripperSwitch);
-        if(armJoystick.getRawButton(3))
+        if(armJoystickR.getRawButton(3))
         {
             return LEFT;
         }
-        else if(armJoystick.getRawButton(2))
+        else if(armJoystickR.getRawButton(2))
         {
             return RIGHT;
         }

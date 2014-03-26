@@ -45,7 +45,7 @@ public class Arm
     
     private double holdPosition = 90;
        
-    public Arm(int armTal2, int rollTal, int armEnc1, int armEnc2, int gripSolenoid, int touch, int topTouch, int bottomTouch, int pot)
+    public Arm(int armTal2, int rollTal, int gripSolenoid, int touch, int topTouch, int bottomTouch, int pot)
     {
         armTalon2 = new Talon(armTal2);
         rollerTalon = new Talon(rollTal);

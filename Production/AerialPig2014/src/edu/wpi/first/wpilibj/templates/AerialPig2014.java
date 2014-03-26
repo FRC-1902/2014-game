@@ -20,10 +20,10 @@ import edu.wpi.first.wpilibj.Watchdog;
 
 public class AerialPig2014 extends IterativeRobot
 {
-    ControlStation controlStation = new ControlStation(1, 2, 3);
+    ControlStation controlStation = new ControlStation(1, 2, 3, 4);
     Drivetrain drivetrain = new Drivetrain(IOConfig.DRIVE_PWM_L1, IOConfig.DRIVE_PWM_L2, IOConfig.DRIVE_PWM_R1, IOConfig.DRIVE_PWM_R2, IOConfig.DRIVE_ENCODER_L1, IOConfig.DRIVE_ENCODER_L2, IOConfig.DRIVE_ENCODER_R1, IOConfig.DRIVE_ENCODER_R2, 1, 1, 9);
     Shooter shooter = new Shooter(IOConfig.SHOOTER_PWM_1, IOConfig.SHOOTER_PWM_2, 0, 0, IOConfig.SHOOTER_FIRE, IOConfig.SHOOTER_FIRE_SAFE, IOConfig.SHOOTER_TOUCH, 5);
-    Arm arm = new Arm(8, 9, 7, 8, 3, 10, 12, 13, 1);
+    Arm arm = new Arm(IOConfig.ARM_PWM, IOConfig.INTAKE_PWM, 3, IOConfig.SHOOTER_TOUCH, 12, 13, 1);
     Teleop teleop = new Teleop(controlStation, drivetrain, shooter, arm);
     Automode automode = new Automode(drivetrain, shooter, arm);
     
