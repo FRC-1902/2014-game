@@ -23,7 +23,7 @@ public class UserMessages {
         errorMessage = new StringBuffer("Everything is OK");
     }
     
-    public void setArmMessage(int armAngle, boolean charged, boolean ball)
+    public void setArmMessage(double armAngle, boolean charged, boolean ball)
     {
         armMessage = new StringBuffer("Arm: ").append(armAngle);
         

@@ -23,7 +23,7 @@ public class AerialPig2014 extends IterativeRobot
     ControlStation controlStation = new ControlStation(1, 2, 3, 4);
     Drivetrain drivetrain = new Drivetrain(IOConfig.DRIVE_PWM_L1, IOConfig.DRIVE_PWM_L2, IOConfig.DRIVE_PWM_R1, IOConfig.DRIVE_PWM_R2, IOConfig.DRIVE_ENCODER_L1, IOConfig.DRIVE_ENCODER_L2, IOConfig.DRIVE_ENCODER_R1, IOConfig.DRIVE_ENCODER_R2, 1, 1, 9);
     Shooter shooter = new Shooter(IOConfig.SHOOTER_PWM_1, IOConfig.SHOOTER_PWM_2, 0, 0, IOConfig.SHOOTER_FIRE, IOConfig.SHOOTER_FIRE_SAFE, IOConfig.SHOOTER_TOUCH, 5);
-    Arm arm = new Arm(IOConfig.ARM_PWM, IOConfig.INTAKE_PWM, 3, IOConfig.SHOOTER_TOUCH, 12, 13, 1);
+    Arm arm = new Arm(IOConfig.ARM_PWM, IOConfig.INTAKE_PWM, 3, IOConfig.GRIPPER_TOUCH, 12, 13, 1);
     Teleop teleop = new Teleop(controlStation, drivetrain, shooter, arm);
     Automode automode = new Automode(drivetrain, shooter, arm);
     
@@ -70,8 +70,8 @@ public class AerialPig2014 extends IterativeRobot
 //			System.out.println("Disabled seconds: " + (printSec - startSec));
 //			printSec++;
 //		}
-                System.out.println("Arm pot: " + arm.positionSensor.get() + " Arm angle: " + 
-                        arm.getArmPosition() + " Drive encoder R/L: " + drivetrain.getEncR() + 
+                System.out.println("Arm " + arm.getStatus() + " - angle (H/S): " + arm.getHoldPosition() + " / " + arm.getArmPosition() + " raw: " + arm.getRawPosition() +
+                        " Drive encoder R/L: " + drivetrain.getEncR() + 
                         "/" + drivetrain.getEncL() + " ft: " + drivetrain.getDistance());
 	}
     
@@ -91,11 +91,16 @@ public class AerialPig2014 extends IterativeRobot
     public void teleopPeriodic()
     {
         teleop.runTeleop();
+        System.out.println("Arm " + arm.getStatus() + " - angle (H/S): " + arm.getHoldPosition() + " / " + arm.getArmPosition() + " raw: " + arm.getRawPosition() +
+                        " Drive encoder R/L: " + drivetrain.getEncR() + 
+                        "/" + drivetrain.getEncL() + " ft: " + drivetrain.getDistance());
         getWatchdog().feed();
     }
     
     public void testPeriodic()
     {
-        System.out.println("Test periodic");
+        arm.setArmMotors(controlStation.getArmJoystick());
+        System.out.println(controlStation.getArmJoystick());
+        getWatchdog().feed();
     }
 }

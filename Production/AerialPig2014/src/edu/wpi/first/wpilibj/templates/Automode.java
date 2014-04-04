@@ -35,8 +35,6 @@ public class Automode
     {
         drivetrain.startDrivetrainEncoder(true);
         drivetrain.resetDrivetrainEncoder();
-        arm.startArmEncoder(true);
-        arm.resetArmEncoder();
         
         shooter.setFireSolenoid(false);
         autoStartTimeMS = System.currentTimeMillis();

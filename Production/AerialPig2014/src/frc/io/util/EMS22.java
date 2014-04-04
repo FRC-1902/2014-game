@@ -39,12 +39,29 @@ import edu.wpi.first.wpilibj.SPIDevice;
 * data: |D9|D8|D7|D6|D5|D4|D3|D2|D1|D0|OCF|COF|LIN|INC|DEC|PAR|
 *        -----------------------------------------------------
 */
-public class EMS22
+public class EMS22 extends AbsoluteEncoder
 {
+    /**
+     * Container for encoder result as public properties. This extends the
+     * AbsoluteEncoder.Result class, adding device specific properties.
+     */
+    public static class DeviceResult extends AbsoluteEncoder.Result
+    {
+        /** End of offset compensation algorithm flag */
+        public boolean isEndOfOffset    = false;
+        /** Cordic overflow indicating an error in cordic part */
+        public boolean isCordicOverflow = false;
+        /** Linearity alarm */
+        public boolean isLinearityAlarm = false;
+        /** True if a parity error has occurred */
+        public boolean isParityError    = false;
+    }
+
+    private static final int    MAX_COUNT = 1023;
     private static final long   SPI_OUT_DONT_CARE = 0; // encoder input only for daisy chain
     private static final int    SPI_FRAME_BITS  = 16;
     private static final int    NUM_STATUS_BITS = 6;
-    private static final double CLOCK_RATE_HZ = 1000000; // 1Mz
+    private static final double CLOCK_RATE_HZ = 20000; // 20KHz
     // Bitmasks for extracting fields from SPI frame
     private static final long   BITMASK_OCF  = 0x20;
     private static final long   BITMASK_COF  = 0x10;
@@ -52,81 +69,79 @@ public class EMS22
     private static final long   BITMASK_INC  = 0x04;
     private static final long   BITMASK_DEC  = 0x02;
 
-    SPIDevice spi;
-    double scaleFactor = 1.0;
+    private final SPIDevice m_spi;
+    private int m_lastGoodValue = 0;
     
-    /**
-     * Container for encoder result as public properties.
-     */
-    public class EncoderResult
-    {
-        /** True if any error has occurred */
-        public boolean isError          = false;
-        /** The scaled position as a floating-point value */
-        public double  scaledValue      = 0.0;
-        /** The raw position value */
-        public int     rawValue         = 0;
-        /** End of offset compensation algorithm flag */
-        public boolean isEndOfOffset    = false;
-        /** Cordic overflow indicating an error in cordic part */
-        public boolean isCordicOverflow = false;
-        /** Linearity alarm */
-        public boolean isLinearityAlarm = false;
-        /** True if increase in magnitude */
-        public boolean isIncrease       = false;
-        /** True if decrease in magnitude */
-        public boolean isDecrease       = false;
-        /** True if a parity error has occurred */
-        public boolean isParityError    = false;
-    }
-
-    /**
-     * Constructor
+   /**
+     * Constructor.
      * @param slot      Slot number for IO (e.g. CRio slot for Digital Sidecar)
      * @param chSCLK    I/O channel for SCLK SPI signal
      * @param chMOSI    I/O channel for MOSI SPI signal
      * @param chMISO    I/O channel for MISO SPI signal
      * @param chCS      I/O channel for CS SPI signal
-     * @param scale     Scale factor applied to raw result value
      */
-    public EMS22(int slot, int chSCLK, int chMOSI, int chMISO, int chCS)
+//    public EMS22(int slot, int chSCLK, int chMOSI, int chMISO, int chCS)
+//    {
+//        // Initialize AbsoluteEncoder base.
+//        super(MAX_COUNT);
+//        m_spi = createSPI(slot, chSCLK, chMOSI, chMISO, chCS);
+//    }
+    
+    /**
+     * Constructor.
+     * @param slot      Slot number for IO (e.g. CRio slot for Digital Sidecar)
+     * @param chSCLK    I/O channel for SCLK SPI signal
+     * @param chMOSI    I/O channel for MOSI SPI signal
+     * @param chMISO    I/O channel for MISO SPI signal
+     * @param chCS      I/O channel for CS SPI signal
+     * @param minRange  Scaled value represented by the minimum count.
+     * @param maxRange  Scaled value represented by the maximum count.
+     */
+    public EMS22(int slot, int chSCLK, int chMOSI, int chMISO, int chCS, double minRange, double maxRange)
     {
-        spi = new SPIDevice(slot, chSCLK, chMOSI, chMISO, chCS, SPIDevice.CS_ACTIVE_LOW);
+        // Initialize AbsoluteEncoder base.
+        super(MAX_COUNT, minRange, maxRange);
+        m_spi = createSPI(slot, chSCLK, chMOSI, chMISO, chCS);
+    }
+    
+   /**
+     * Creates and initializes the SPI driver.
+     * @param slot      Slot number for IO (e.g. CRio slot for Digital Sidecar)
+     * @param chSCLK    I/O channel for SCLK SPI signal
+     * @param chMOSI    I/O channel for MOSI SPI signal
+     * @param chMISO    I/O channel for MISO SPI signal
+     * @param chCS      I/O channel for CS SPI signal
+     */
+    private SPIDevice createSPI(int slot, int chSCLK, int chMOSI, int chMISO, int chCS)
+    {
+        SPIDevice spi = new SPIDevice(slot, chSCLK, chMOSI, chMISO, chCS, SPIDevice.CS_ACTIVE_LOW);
         spi.setBitOrder(SPIDevice.BIT_ORDER_MSB_FIRST);
         spi.setClockPolarity(SPIDevice.CLOCK_POLARITY_ACTIVE_HIGH);
         spi.setClockRate(CLOCK_RATE_HZ);
         spi.setDataOnTrailing(SPIDevice.DATA_ON_TRAILING_EDGE);
         spi.setFrameMode(SPIDevice.FRAME_MODE_CHIP_SELECT);
+        return spi;
     }
     
     /**
-     * Get the scale factor that is multiplied by the raw value from the encoder
-     * to calculate the scaled value. The default value is 1.0.
-     * @return The scale factor
+     * To be implemented by extending class. Returns the current encoder result.
+     * @return Current absolute encoder result.
      */
-    public double getScaleFactor()
+    protected AbsoluteEncoder.Result readPosition()
     {
-        return scaleFactor;
+        return (AbsoluteEncoder.Result)readDevicePosition();
     }
-    
+
     /**
-     * Set the scale factor that is multiplied by the raw value from the encoder
-     * to calculate the scaled value.
-     * @param scale     The scale factor (generally <= 1.0)
+     * Read the encoder to get the current position and other information. This
+     * result is specific to the device.
+     * @return The result as an object with properties.
      */
-    public void setScaleFactor(double scale)
+    public DeviceResult readDevicePosition()
     {
-        scaleFactor = scale;
-    }
-    
-    /**
-     * Read the encoder to get the current position.
-     * @return The result in an EncoderResult object.
-     */
-    public EncoderResult get()
-    {
-        EncoderResult result = new EncoderResult();
-        long data = spi.transfer(SPI_OUT_DONT_CARE, SPI_FRAME_BITS);
+        DeviceResult result = new DeviceResult();
+        long data = m_spi.transfer(SPI_OUT_DONT_CARE, SPI_FRAME_BITS);
+        System.out.println("EMS22: " + data);
         result.isEndOfOffset    = (data & BITMASK_OCF) != 0;
         result.isCordicOverflow = (data & BITMASK_COF) != 0;
         result.isLinearityAlarm = (data & BITMASK_LIN) != 0;
@@ -137,7 +152,14 @@ public class EMS22
                          result.isLinearityAlarm ||
                          result.isParityError;
         result.rawValue = (int)(data >>> NUM_STATUS_BITS); // unsigned shift
-        result.scaledValue = result.rawValue * scaleFactor;
+        if (!result.isError)
+        {
+            m_lastGoodValue = result.rawValue;
+        }
+        else if (result.isParityError)
+        {
+            result.rawValue = m_lastGoodValue;
+        }
         return result;
     }
     

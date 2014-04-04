@@ -46,6 +46,7 @@ public class Teleop
         drivetrain.compressor.start();
         System.out.println("Made it into teleop init " + doubleRunCheck);
         doubleRunCheck++;
+        arm.setHoldPosition(Arm.startPreset);
     }
     
     public void runTeleop()
@@ -94,7 +95,16 @@ public class Teleop
         }
         if(controlStation.getTrussPreset() == ControlStation.PRESSED)
         {
-            arm.moveArmTo(Arm.trussPreset);
+            arm.setHoldPosition(Arm.trussPreset);
+        }
+        if(controlStation.getHotKeyPreset() == ControlStation.PRESSED)
+        {
+            arm.setHoldPosition(arm.hotKeyPreset);
+        }
+        
+        if(controlStation.setHotKeyPreset() == ControlStation.PRESSED)
+        {
+            arm.setHotKeyPreset();
         }
         
         //Fire!!
@@ -165,6 +175,16 @@ public class Teleop
         ballMessage = arm.getGripperTouchSensor();
         userMessages.setArmMessage(arm.getArmPosition(), false, false);
 //        System.out.println("Arm Position: " + arm.getArmPosition());
+        
+        if(controlStation.enablePID() == ControlStation.PRESSED)
+        {
+            arm.enableAngleControl();
+        }
+        
+        else if(controlStation.disablePID() == ControlStation.PRESSED)
+        {
+            arm.disableAngleControl();
+        }
         
         shooter.process();
         

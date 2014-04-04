@@ -121,12 +121,12 @@ public class ControlStation
 //    
     public int getScorePreset()
     {
-        return armJoystickR.getRawButton(2) ? PRESSED : NOT_PRESSED;
+        return armJoystickL.getRawButton(2) ? PRESSED : NOT_PRESSED;
     }
     
     public int getTrussPreset()
     {
-        return armJoystickR.getRawButton(3) ? PRESSED : NOT_PRESSED;
+        return armJoystickL.getRawButton(3) ? PRESSED : NOT_PRESSED;
     }
     
     public int getHotKeyPreset()
@@ -168,5 +168,29 @@ public class ControlStation
             return MIDDLE;
         }
         //return MIDDLE;
+    }
+    
+    public int enablePID()
+    {
+        if(armJoystickR.getRawButton(6))
+        {
+            return PRESSED;
+        }
+        else
+        {
+            return NOT_PRESSED;
+        }
+    }
+    
+    public int disablePID()
+    {
+        if(armJoystickR.getRawButton(7))
+        {
+            return PRESSED;
+        }
+        else
+        {
+            return NOT_PRESSED;
+        }
     }
 }
