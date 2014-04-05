@@ -17,9 +17,9 @@ public class Automode
     Arm arm;
     
     //Variables
-    int step = 4;
+    int step = 0;
     long autoStartTimeMS = 0;
-    long currentAutoTimeMS = 0;
+    long stepStartTimeMS = 0;
     double moveDistance = 4;
     //TODO: make camera work good
     boolean isHotGoal = true;
@@ -35,63 +35,65 @@ public class Automode
     {
         drivetrain.startDrivetrainEncoder(true);
         drivetrain.resetDrivetrainEncoder();
-        
-        shooter.setFireSolenoid(false);
+        drivetrain.compressor.start();
+        shooter.prepareToShoot();
         autoStartTimeMS = System.currentTimeMillis();
+        arm.enableAngleControl();
+        setStep(0);
     }
     
     public void runAutomode()
     {
-        System.out.println("Step: " + step);
+        arm.updateArmPosition();
         //TODO: Auto must be tested and tuned
         if(step == 0)
         {
+            shooter.prepareToShoot();
             shooter.chargeShooter();
-            arm.setHoldPosition(Arm.autoScorePreset);
             
-            if(getTime() >= 800)
+            if(getStepTime() >= 800)
             {
-                step++;
+                nextStep();
             }
         }
         else if(step == 1)
         {
-            arm.updateArmPosition();
             arm.setGripperSolenoid(true);
-            if(getTime() >= 1300)
+            
+            if(getStepTime() >= 500)
             {
-               step++; 
+               nextStep(); 
             }
         }
         else if(step == 2)
         {
             //TODO:if camera
-            arm.updateArmPosition();
-            if(isHotGoal || getTime() >= 5000)
+            arm.setHoldPosition(Arm.autoScorePreset);
+            if(getStepTime() >= 2000)
             {
-                step++;
+                nextStep();
             }
         }
         else if(step == 3)
         {
-            arm.updateArmPosition();
-            shooter.setFireSolenoid(true);
-            if(getTime() >= 2500)
+            arm.setHoldPosition(Arm.autoScorePreset);
+            shooter.shoot();
+            if(getStepTime() >= 2500)
             {
-                step++;
+                nextStep();
                 drivetrain.resetDrivetrainEncoder();
             }
         }
         else if(step == 4)
         {
-            if(getTime() > 8000)
-            {
+   
+            
                 drivetrain.moveTo(moveDistance);
                 if(drivetrain.getDistance() >= moveDistance)
                 {
-                    step++;
+                    nextStep();
                 }
-            }
+            
         }
         
     }
@@ -99,5 +101,22 @@ public class Automode
     public long getTime()
     {
         return System.currentTimeMillis() - autoStartTimeMS;
+    }
+    
+    public long getStepTime()
+    {
+        return System.currentTimeMillis() - stepStartTimeMS;
+    }
+    
+    private void nextStep()
+    {
+        setStep(step + 1);
+    }
+    
+    private void setStep(int newStep)
+    {
+        step = newStep;
+        stepStartTimeMS = System.currentTimeMillis();
+        System.out.println("Step: " + step + " Time: " + getTime());
     }
 }

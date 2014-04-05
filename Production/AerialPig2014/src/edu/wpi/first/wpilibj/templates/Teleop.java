@@ -114,7 +114,7 @@ public class Teleop
             {
 //                hasFired = true;
                 //fireStartTimeMS = System.currentTimeMillis();
-                shooter.setFireSolenoid(true);
+                shooter.shoot();
             }
         }
         else

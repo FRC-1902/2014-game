@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
  */
 public class Shooter 
 {    
+    public final static boolean SHOOTER_FIRE = true;
+    public final static boolean SHOOTER_COCKED = false;
+    
     Talon winchTalon1;
     Talon winchTalon2;
     Solenoid fireSolenoidShoot;
@@ -38,7 +41,7 @@ public class Shooter
         winchTouchSensor = new DigitalInput(digIn);
         winchTouchPower = new Solenoid(touchPower);
         
-        setFireSolenoid(false);
+        prepareToShoot();
     }
     
     //Pulls back the piston for firing
@@ -73,7 +76,7 @@ public class Shooter
         }
         else if(chargeStep == 2)
         {
-                setFireSolenoid(false);
+                prepareToShoot();
                 nextChargeStep();  
         }
         else if(chargeStep == 3 && done)
@@ -129,10 +132,18 @@ public class Shooter
         return winchTouchSensor.get();
     }
     
-    public void setFireSolenoid(boolean fire)
+    public void shoot()
     {
-        fireSolenoidShoot.set(fire);
-        fireSolenoidSafe.set(!fire);
+        fireSolenoidShoot.set(SHOOTER_FIRE);
+        fireSolenoidSafe.set(SHOOTER_COCKED);
+        System.out.println("Shooting");
+    }
+    
+    public void prepareToShoot()
+    {
+        fireSolenoidShoot.set(SHOOTER_COCKED);
+        fireSolenoidSafe.set(SHOOTER_FIRE);
+        System.out.println("Preparing to shoot");
     }
     
     private void nextChargeStep()

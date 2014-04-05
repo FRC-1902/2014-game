@@ -78,7 +78,6 @@ public class AerialPig2014 extends IterativeRobot
     public void autonomousPeriodic()
     {
         automode.runAutomode();
-        System.out.println("Autoperiodic");
         getWatchdog().feed();
     }
     

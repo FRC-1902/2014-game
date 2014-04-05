@@ -22,9 +22,9 @@ public class Arm
 {
     public static final double startPreset     =  86.0;
     public static final double floorPreset     = -20.0;
-    public static final double scorePreset     =  34.0;
+    public static final double scorePreset     =  27.0;
     public static final double trussPreset     =  57.0;
-    public static final double autoScorePreset =  39.0;
+    public static final double autoScorePreset =  27.0;
     
     public double hotKeyPreset = 90.0;
 
@@ -145,6 +145,7 @@ public class Arm
     public void setGripperSolenoid(boolean gripper)
     {
         gripperSolenoid.set(gripper);
+        System.out.println("Gripper set: " + (gripper ? "Open" : "Closed"));
     }
     
     public String getStatus()
@@ -219,6 +220,8 @@ public class Arm
         {
             moveArmTo(holdPosition);
         }
+        
+        System.out.println("Hold Position: " + angle);
     }
     
     public void setHotKeyPreset()
@@ -259,6 +262,7 @@ public class Arm
      */
     public void updateArmPosition()
     {
+        System.out.println("updateArmPosition - enabled: " + angleControlEnabled + " hold: " + holdPosition + " angle: " + getArmPosition());
         if (angleControlEnabled && !usePID)
         {
             double currentPosition = getArmPosition();
@@ -358,7 +362,7 @@ public class Arm
         error = Math.max(error, ANGLE_MOTOR_PWM_MIN);
         error = Math.min(error, ANGLE_MOTOR_PWM_MAX);
         
-        if (Math.abs(error) < 0.1)
+        if (Math.abs(error) < 0.03)
         {
             error = 0;
         }

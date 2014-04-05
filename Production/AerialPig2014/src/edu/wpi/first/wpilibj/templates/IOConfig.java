@@ -14,7 +14,7 @@ import frc.io.util.Digital;
  */
 public class IOConfig
 {
-    public static final int SIDECAR_SLOT = 2;
+    public static final int SIDECAR_SLOT = 1;
 
     // --- Arm ---
     public static final int SPI_MOSI            = Digital.GPIO1;
