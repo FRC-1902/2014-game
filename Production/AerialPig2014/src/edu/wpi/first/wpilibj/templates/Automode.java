@@ -60,7 +60,7 @@ public class Automode
         {
             arm.setGripperSolenoid(true);
             
-            if(getStepTime() >= 500)
+            if(getStepTime() >= 3000)
             {
                nextStep(); 
             }

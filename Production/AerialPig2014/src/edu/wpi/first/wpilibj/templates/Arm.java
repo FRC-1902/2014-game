@@ -22,9 +22,9 @@ public class Arm
 {
     public static final double startPreset     =  86.0;
     public static final double floorPreset     = -20.0;
-    public static final double scorePreset     =  27.0;
+    public static final double scorePreset     =  25.5;
     public static final double trussPreset     =  57.0;
-    public static final double autoScorePreset =  27.0;
+    public static final double autoScorePreset =  21.0;
     
     public double hotKeyPreset = 90.0;
 
@@ -35,8 +35,8 @@ public class Arm
     // The tolerance on the arm angle in degrees.
     public static final double ARM_ANGLE_TOL =  1.0; // degrees tolerance
     // Maximum energy with which we want to drive the motor.
-    public static final double ANGLE_MOTOR_PWM_MIN = -0.30;
-    public static final double ANGLE_MOTOR_PWM_MAX =  0.30;
+    public static final double ANGLE_MOTOR_PWM_MIN = -0.50;
+    public static final double ANGLE_MOTOR_PWM_MAX =  0.50;
     // Proportional, Integral, and Derivative constants (must be tuned).
     private static final double Kp = 0.3;
     private static final double Ki = 0.1;

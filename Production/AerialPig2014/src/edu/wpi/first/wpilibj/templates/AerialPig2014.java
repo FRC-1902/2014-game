@@ -73,6 +73,7 @@ public class AerialPig2014 extends IterativeRobot
                 System.out.println("Arm " + arm.getStatus() + " - angle (H/S): " + arm.getHoldPosition() + " / " + arm.getArmPosition() + " raw: " + arm.getRawPosition() +
                         " Drive encoder R/L: " + drivetrain.getEncR() + 
                         "/" + drivetrain.getEncL() + " ft: " + drivetrain.getDistance());
+                System.out.println("Left/Right: " + controlStation.getLeftJoystick() + "/" + controlStation.getRightJoystick());
 	}
     
     public void autonomousPeriodic()
@@ -93,6 +94,7 @@ public class AerialPig2014 extends IterativeRobot
         System.out.println("Arm " + arm.getStatus() + " - angle (H/S): " + arm.getHoldPosition() + " / " + arm.getArmPosition() + " raw: " + arm.getRawPosition() +
                         " Drive encoder R/L: " + drivetrain.getEncR() + 
                         "/" + drivetrain.getEncL() + " ft: " + drivetrain.getDistance());
+        System.out.println("Left/Right: " + controlStation.getLeftJoystick() + "/" + controlStation.getRightJoystick());
         getWatchdog().feed();
     }
     
