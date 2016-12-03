@@ -1,1 +1,9 @@
 Some test notes.
+
+
+
+
+---------
+
+On 12/3/16, Ryan Shavell looked into the notes.txt file to see if he could find a fragment of the 2014 programmer's
+thoughts/opinions. Instead, he found the above message. 10/10
